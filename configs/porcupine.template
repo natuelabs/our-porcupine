@@ -1,0 +1,16 @@
+var config = {
+  github : {
+    oauthToken : '',
+  },
+  trello : {
+    key : '',
+    token : '',
+  },
+  jenkins : {
+    baseUrl : '',
+    user : '',
+    pass : ''
+  }
+};
+
+module.exports = config;

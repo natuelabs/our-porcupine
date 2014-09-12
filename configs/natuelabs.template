@@ -1,0 +1,22 @@
+var config = {
+  jenkinsData : {
+    refreshBranches : '',
+    deployStaging : ''
+  },
+  ignoreUser : {
+    github : '',
+    trello : ''
+  },
+  projects : {
+    shop : {
+      github : {
+        owner : '',
+        repo : ''
+      },
+      trello : {
+        code : 'SHO'
+      }
+    }
+};
+
+module.exports = config;

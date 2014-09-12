@@ -1,0 +1,26 @@
+{
+  "name" : "our-porcupine",
+  "description" : "Our Porcupine integration",
+  "author" : {
+    "name" : "Natue",
+    "url" : "http://www.natue.com.br/"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/natuelabs/our-porcupine.git"
+  },
+  "main" : "index.js",
+  "scripts" : {
+    "start" : "node index.js",
+    "test" : "grunt test"
+  },
+  "engines" : {
+    "node" : ">=0.10.0"
+  },
+  "dependencies" : {
+    "porcupine" : "~0.1.1",
+    "nodemon" : "~1.2.1",
+    "grunt" : "~0.4.5",
+    "grunt-contrib-jshint" : "~0.10.0"
+  }
+}
