@@ -3,6 +3,10 @@ var config = {
     refreshBranches : '',
     deployStaging : ''
   },
+  jenkinsWMSData : {
+    refreshBranches : '',
+    deployStaging : ''
+  },
   ignoreUser : {
     github : '',
     trello : ''

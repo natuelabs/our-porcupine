@@ -20,6 +20,7 @@ function Natuelabs () {
   };
 
   this.jenkinsData = config.jenkinsData;
+  this.jenkinsWMSData = config.jenkinsWMSData;
   this.ignoreUser = config.ignoreUser;
   this.projects = config.projects;
 
@@ -366,24 +367,41 @@ Natuelabs.prototype.handleTrelloCardAttachmentCreated = function ( data ) {
  * @param  {Object} data
  */
 Natuelabs.prototype.handleGithubPushCreated = function ( data ) {
-  if ( data.repository.name !== this.projects.shop.github.repo || data.repository.owner !== this.projects.shop.github.owner ) {
-    this.log( false, 'Push ignored, repo ' + data.repository.name + ', owner ' + data.repository.owner );
+  if ( data.repository.name == this.projects.shop.github.repo && data.repository.owner == this.projects.shop.github.owner ) {
+    eventEmitter.emit(
+      events.jenkins.job.build,
+      {
+        job : this.jenkinsData.refreshBranches
+      },
+      function callback ( err, response ) {
+        if ( err ) {
+          this.log( err, response );
+
+        }
+      }.bind( this )
+    );
 
     return;
   }
 
-  eventEmitter.emit(
-    events.jenkins.job.build,
-    {
-      job : this.jenkinsData.refreshBranches
-    },
-    function callback ( err, response ) {
-      if ( err ) {
-        this.log( err, response );
+  if ( data.repository.name == this.projects.wms.github.repo && data.repository.owner == this.projects.wms.github.owner ) {
+    eventEmitter.emit(
+      events.jenkins.job.build,
+      {
+        job : this.jenkinsWMSData.refreshBranches
+      },
+      function callback ( err, response ) {
+        if ( err ) {
+          this.log( err, response );
 
-      }
-    }.bind( this )
-  );
+        }
+      }.bind( this )
+    );
+
+    return;
+  }
+
+  this.log( false, 'Push ignored, repo ' + data.repository.name + ', owner ' + data.repository.owner );
 };
 
 /**
@@ -392,27 +410,47 @@ Natuelabs.prototype.handleGithubPushCreated = function ( data ) {
  * @param  {Object} data
  */
 Natuelabs.prototype.handleGithubReleaseCreated = function ( data ) {
-  if ( data.repository.name !== this.projects.shop.github.repo || data.repository.owner !== this.projects.shop.github.owner ) {
-    this.log( false, 'Release ignored, repo ' + data.repository.name + ', owner ' + data.repository.owner );
+  if ( data.repository.name == this.projects.shop.github.repo && data.repository.owner == this.projects.shop.github.owner ) {
+    eventEmitter.emit(
+      events.jenkins.job.build,
+      {
+        job : this.jenkinsData.deployStaging,
+        params : {
+          TAG_STRING : data.tag
+        }
+      },
+      function callback ( err, response ) {
+        if ( err ) {
+          this.log( err, response );
+
+        }
+      }.bind( this )
+    );
 
     return;
   }
 
-  eventEmitter.emit(
-    events.jenkins.job.build,
-    {
-      job : this.jenkinsData.deployStaging,
-      params : {
-        TAG_STRING : data.tag
-      }
-    },
-    function callback ( err, response ) {
-      if ( err ) {
-        this.log( err, response );
+  if ( data.repository.name == this.projects.wms.github.repo && data.repository.owner == this.projects.wms.github.owner ) {
+    eventEmitter.emit(
+      events.jenkins.job.build,
+      {
+        job : this.jenkinsWMSData.deployStaging,
+        params : {
+          TAG_STRING : data.tag
+        }
+      },
+      function callback ( err, response ) {
+        if ( err ) {
+          this.log( err, response );
 
-      }
-    }.bind( this )
-  );
+        }
+      }.bind( this )
+    );
+
+    return;
+  }
+
+  this.log( false, 'Release ignored, repo ' + data.repository.name + ', owner ' + data.repository.owner );
 };
 
 /**
